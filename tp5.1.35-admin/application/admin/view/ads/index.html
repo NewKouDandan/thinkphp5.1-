@@ -1,0 +1,117 @@
+{extend name='layout/public'/}
+
+{block name='content'}
+<script language='javascript'>if (parent.$$('admincpnav')) parent.$$('admincpnav').innerHTML = '后台首页&nbsp;&raquo;&nbsp;广告&nbsp;&raquo;&nbsp;广告管理';</script>
+
+<table class=tb width="100%">
+    <tr class=thead>
+        <th colspan=7>广告管理</th>
+    </tr>
+
+    <tr>
+        <form method="get" action="">
+            <td height="12" colspan="6" align="left"> 广告搜索：
+                <input name="title" type="text" size="20" maxlength="255" value="{$title}"/>
+                &nbsp;&nbsp;
+                <select name="smallclassid" style="color:#000000;" class="select">
+                    <option value='0'>查看全部广告</option>
+                    {foreach name='categorys' item='vo'}
+                    <option value="{$vo['id']}" {if condition="$smallclassid==$vo['id']" }selected{/if}>{$vo['_cnname']}</option>
+                    {/foreach}
+                </select>&nbsp;&nbsp;&nbsp;<input name="button" type="submit" value="搜 索" class="btn"/>
+            </td>
+        </form>
+    </tr>
+
+    <form name="iForm" id="iForm" action="" method="post">
+        <tr class="dtit">
+            <td width="4%">ID</td>
+            <td>标题</td>
+            <td>广告位置</td>
+            <td>链接地址</td>
+            <td>审核</td>
+            <td>排序</td>
+            <td width="10%">操作</td>
+        </tr>
+
+        {foreach name='ads' id='ad'}
+        <tr class="tdbg li">
+            <td><input type="checkbox" name="nid[]" id="nid" value="{$ad['id']}" class="np"/></td>
+            <td align="left"><a href="{:url('edit',['id'=>$ad['id']])}" style="color:#0066FF">{$ad['adsname']}</a></td>
+            <td align="left">{$ad['cnname']}</a></td>
+            <td align="left">{$ad['linkurl']}</a></td>
+            <td>{:getchecked($ad['checked'])}</td>
+            <td align="left">{$ad['sortid']}</a></td>
+            <td>
+                <a href="{:url('edit',['id'=>$ad['id']])}">编辑</a>
+                <a class="del" href="javascript:void(null)" data-url="{:url('del',['id'=>$ad['id']])}">删除</a>
+            </td>
+        </tr>
+        {/foreach}
+
+        <tr class="tdbg">
+            <td colspan="6">
+
+                全选<input type="checkbox" name="chkall" id="chkall" class="chk"
+                         onclick="checkAll(this.checked,'input','nid[]')"/>
+                反选<input type="checkbox" name="chkothers" id="chkothers" class="chk"
+                         onclick="checkOthers('input','nid[]')"/>
+                操作：
+                <select name="Action">
+                    <option value="Pass">审核</option>
+                    <option value="NoPass">取消审核</option>
+                    <option value="Del">删除</option>
+                </select>&nbsp;
+
+                <input name="b4" type="button" value="执行" class="btn" onClick="return RunAction(this.form)">
+            </td>
+        </tr>
+
+        <tr class="tdbg">
+            <td colspan="7">
+                <div class='pages'>
+                    <ul>页次：{$ads->getCurrentPage()}/{$ads->lastPage()} 页 &nbsp;共{$ads->total()}条记录</ul>
+                    {$ads->render()}
+
+                </div>
+            </td>
+        </tr>
+    </form>
+</table>
+
+{/block}
+
+{block name='js'}
+<script>
+
+    $(function () {
+        $(".del").click(function () {
+            var delurl = $(this).data('url');
+            parent.layer.confirm('确定删除此广告？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                parent.layer.closeAll();
+                location.href = delurl;
+            });
+        });
+    });
+
+    function RunAction(theform) {
+        if (checkSub(theform, 'nid[]') >= 1) {
+            //submitConfirm("你确定要执行此操作吗？");
+            // return false;
+            parent.layer.confirm('你确定要执行此操作吗？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                parent.layer.closeAll();
+                $("#iForm").submit();
+            });
+        }
+        else {
+            layer.msg('请最少选择一条广告进行操作');
+//          return false;
+        }
+    }
+
+</script>
+{/block}

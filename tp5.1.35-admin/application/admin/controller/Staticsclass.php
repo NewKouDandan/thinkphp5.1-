@@ -3,83 +3,98 @@
 namespace app\admin\controller;
 
 use think\Controller;
-use think\Request;
+use think\Model;
 
-class Staticsclass extends Controller
+class Staticsclass extends Common
 {
+
     /**
      * 显示资源列表
-     *
-     * @return \think\Response
+     * @return mixed
      */
     public function index()
     {
-        //
+        //获取列表数据
+        $categorys = $this->staticclass->getCategory();
+        $this->assign('categorys', $categorys);
+        return $this->fetch();
     }
 
     /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
+     * 添加页面传参
+     * @return mixed
      */
     public function create()
     {
-        //
+        $categorys = $this->staticclass->getCategory();
+        $this->assign('categorys', $categorys);
+        return $this->fetch();
     }
 
     /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
+     * 添加
      */
-    public function save(Request $request)
+    public function store()
     {
-        //
+        if (request()->isPost()) {
+            $result = $this->staticclass->store(input('post.'));
+            if ($result['valid']) {
+                //操作成功
+                $this->success($result['msg'], 'index');
+                exit;
+            } else {
+                $this->error($result['msg']);
+                exit;
+            }
+        }
     }
 
     /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
+     * 编辑
+     * @return mixed
      */
-    public function read($id)
+    public function edit()
     {
-        //
+        if (request()->isPost()) {
+            $res = $this->staticclass->edit(input('post.'));
+            if ($res['valid']) {
+                //执行成功
+                $this->success($res['msg'], 'index');
+                exit;
+            } else {
+                $this->error($res['msg']);
+                exit;
+            }
+        }
+
+        $id = input('param.id');
+        $category = $this->staticclass->find($id);
+        //获取自己及子集
+        $categorys = $this->staticclass->getCateData($id);
+
+        $this->assign(['categorys' => $categorys, 'category' => $category]);
+
+        return $this->fetch();
     }
 
     /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
+     * 删除
      */
-    public function edit($id)
+    public function del()
     {
-        //
+        if (request()->isGet()) {
+            $res = $this->staticclass->where('id', input('id'))->delete();
+            //执行删除
+            if ($res) {
+                //成功提示
+                $this->success('操作成功', 'index');
+                exit;
+            } else {
+                $this->error('操作失败');
+                exit;
+            }
+        }
     }
 
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * 删除指定资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function delete($id)
-    {
-        //
-    }
 }

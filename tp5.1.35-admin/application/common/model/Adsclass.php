@@ -8,6 +8,8 @@ use think\Model;
 class Adsclass extends Model
 {
     protected $pk = 'id';
+    protected $field = true;
+    protected $table = 'sw_adsclass';
 
     /**
      * 添加分类

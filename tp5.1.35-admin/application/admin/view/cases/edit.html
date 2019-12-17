@@ -1,0 +1,114 @@
+{extend name='layout/public'/}
+
+{block name='content'}
+    <script language='javascript'>if (parent.$$('admincpnav')) parent.$$('admincpnav').innerHTML = '后台首页&nbsp;&raquo;&nbsp;案例&nbsp;&raquo;&nbsp;案例编辑';</script>
+
+    <script type="text/javascript" src="/console/js/calendar/calendar.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+
+    <form method="post" action="{:url('edit')}">
+        <table class=tb width="100%" id="tb">
+            <tr class=thead>
+                <th colspan=2>案例编辑</th>
+            </tr>
+            <tr class="tdbg">
+                <td width="88" valign="middle" align="right"><span class=red>*</span> 所属类别：</td>
+                <td height="0" align="left" valign="middle">
+                    <select name="smallclassid">
+                        <OPTGROUP label="案例">
+                            {foreach name='categorys' item='vo'}
+                            <option  {if condition="$detail['smallclassid']==$vo['id']"}selected{/if} value="{$vo['id']}">{$vo['_cnname']}</option>
+                            {/foreach}
+                        </OPTGROUP>
+                    </select>
+                </td>
+            </tr>
+            <tr class=tdbg>
+                <td valign="middle" align="right"><span class=red>*</span> 案例标题：</td>
+                <td><input name="title" type="TEXT" style='width:380px;' maxlength=200 value="{$detail['title']}">
+                    属性：<input type="checkbox" name="commend" value=1> [推荐]&nbsp;
+                </td>
+            </tr>
+
+            <!--<tr class=tdbg>-->
+                <!--<td valign="middle" align="right">副标题：</td>-->
+                <!--<td><input name="dititle" type="TEXT" style='width:380px;' maxlength=200 value="{$detail['dititle']}"></td>-->
+            <!--</tr>-->
+
+            <tr class=tdbg>
+                <td valign="middle" align="right">案例来源：</td>
+                <td><input name="original" type="TEXT" style='width:200px;' maxlength=35 value="{$detail['original']}">&nbsp;&nbsp;
+                    案例编辑：<input value="{$detail['author']}" name="author" type="TEXT" style='width:200px;' maxlength=35>&nbsp;&nbsp;
+                    点击率：<input value="{$detail['hits']}" name="hits" id="hits" type="TEXT" style='width:60px;' maxlength=4>
+                </td>
+            </tr>
+
+            <tr class=tdbg>
+                <td valign="middle" align="right">缩略图：</td>
+                <td valign="middle">
+                    <input name="smpic" type="text" value="{$detail['smpic']}" id="smpic" class="input normal upload-path" />
+                    <div class="upload-box upload-img"></div>
+                    <span class=gray>缩略图内存大小 200K 左右</span>
+                </td>
+            </tr>
+
+            <tr class=tdbg>
+                <td valign="middle" align="right">关键字：</td>
+                <td><INPUT NAME="tags" TYPE="TEXT" id=tags style='width:300px;' maxlength=100 value="{$detail['tags']}"> <span
+                        class=gray>关键字之间用半角“,”隔开。</span></td>
+            </tr>
+            <tr class=tdbg>
+                <td valign="middle" align="right">内容摘要：</td>
+                <td><textarea rows="5" name="detail" style="width:300px;height:50px">{$detail['detail']}</textarea>
+                </td>
+            </tr>
+
+
+
+            <tr class=tdbg>
+                <td valign="middle" align="right">发布日期：</td>
+                <td>&nbsp; <INPUT NAME="addtime" id="pubdate" TYPE="TEXT" SIZE=30 maxlength=30
+                                  value="{:date('Y-m-d H:i',$detail['addtime'])}"></td>
+            </tr>
+
+            <tr class=tdbg>
+                <td valign="middle" align="right">状态：</td>
+                <td valign="middle">
+                    <input type=radio class="np" name=checked value=1 {if condition="$detail['checked']==1"} checked {/if}>已审核
+                    <input type=radio class="np" name=checked value=0 {if condition="$detail['checked']==0"} checked {/if}>待审核
+                </td>
+            </tr>
+
+            <tr class="tdbg">
+                <td></td>
+                <td height="30">
+                    <!-- 保证接收的数据，与修改的数据一致 -->
+                    <input type="hidden" name="id" value="{:input('param.id')}">
+                    <input class="btn" type="submit" value="确定">
+            </tr>
+        </table>
+    </form>
+{/block}
+
+{block name='js'}
+<script type="text/javascript" charset="utf-8" src="http://console.uicdn.cn/assets/js/webuploader/webuploader.min.js "></script>
+<script type="text/javascript" charset="utf-8" src="http://console.uicdn.cn/assets/js/uploader.js"></script>
+<script language="javascript" type="text/javascript">
+
+    $(function () {
+
+        $(".upload-img").InitUploader({sendurl: "{:url('/admin/tools/upload')}", swf: "http://console.uicdn.cn/assets/js/webuploader/uploader.swf" });
+    })
+
+
+    Calendar.setup({
+        inputField: "pubdate",
+        ifFormat: "%Y-%m-%d %H:%M",
+        showsTime: true,
+        position: [0, 0],
+        timeFormat: "24"
+    });
+</script>
+{/block}
+

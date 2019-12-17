@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>善微网站后台管理系统(SanWays Cms v2.0)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    <link rel="stylesheet" href="/console/img/admin.css" type="text/css" media="all"/>
+    <script src='/console/js/jquery-1.7.1.min.js' language="javascript" type="text/javascript"></script>
+    <script src="/console/js/main.js" type="text/javascript"></script>
+</head>
+<body style="margin: 0px" scroll="no"
+      onmouseover="self.status='当前用户：[{:session('admin.username')}]:　善微网络网站管理系统，Www.SanWays.Com';return true">
+<table cellpadding="0" cellspacing="0" width="100%" height="100%">
+    <tr>
+        <td colspan="2" height="90">
+            <div class="header">
+                <div class="logo" onClick="window.open('../');" style="cursor:pointer;">后台管理中心-SanWays Cms1.0</div>
+                <div class="pannel">
+                    <p>&nbsp;&nbsp;您好<span style="color:#FF0000"><em>{:session('admin.username')}</em></span>
+                        <!--({if condition="session('admin.permissions')==0"}系统管理员{/if}-->
+                        <!--{if condition="session('admin.permissions')==1"}网站编辑{/if})-->
+                        (
+                        {if condition="session('admin.permissions')==0"}系统管理员
+                        {else/}网站编辑
+                        {/if}
+                        )
+                        &nbsp;&nbsp;
+                        [<a href="/" target="_blank">网站首页</a>]
+
+                        [<a href="/admin/manager/changepassword" target="main">修改密码</a>]
+                        [<a href="/admin/login/logout" target="_top">退出</a>]
+                    </p>
+                </div>
+                <div class="navbg"></div>
+                <div class="menunav">
+                    <!--上部菜单 changeMenu(左侧菜单id号后部分，右侧默认打开的url)-->
+                    <ul id="topmenu">
+                        <li><em><a href="#" id="header_common"
+                                   onClick="changeMenu('common', '/admin/index/main');">首页</a></em></li>
+
+                        <li><em><a href="#" id="header_news"
+                                   onClick="changeMenu('news', '/admin/news/index');">信息</a></em></li>
+
+                        <!--<li><em><a href="#" id="header_cases"-->
+                                   <!--onClick="changeMenu('cases', '/admin/cases/index');">案例</a></em></li>-->
+
+                        <li><em><a href="#" id="header_statics"
+                                   onClick="changeMenu('statics', '/admin/statics/index');">单页</a></em></li>
+
+                        <li><em><a href="#" id="header_message"
+                                   onClick="changeMenu('message', '/admin/message/index');">留言</a></em></li>
+
+                        <li><em><a href="#" id="header_ads"
+                                   onClick="changeMenu('ads', '/admin/ads/index');">广告</a></em></li>
+
+                        {if condition="session('admin.permissions')==0" }
+                        <li><em><a href="#" id="header_manager"
+                                   onClick="changeMenu('manager', '/admin/manager/index');">系统</a></em></li>
+                        {/if}
+                    </ul>
+                    <!--当前所在位置导航 js动态插入-->
+                    <div class="iamhere">
+                        <p id="admincpnav"></p>
+                    </div>
+                    <div class="navbd"></div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" width="180" class="menutd">
+            <div id="leftmenu" class="menu">
+                <!--左菜单 ul id号为menu_XXXX形式，XXXX与上部导航菜单传递参数、JS中topMenus数组一至，li a中的链接与上部导航菜单传递参数一至-->
+                <ul id="menu_common" style="display: none">
+
+                    <li><a href="/admin/index/main" target="main">后台首页</a></li>
+                    <li class="menuspace"><a></a></li>
+                    <li><a href="/admin/manager/changepassword" target="main">修改密码</a></li>
+
+                </ul>
+
+                <ul id="menu_news" style="display: none">
+                    <!--<li><a href="/admin/Newsclass/index" target="main">分类管理</a></li>-->
+                    <!--<li><a href="/admin/Newsclass/create" target="main">分类添加</a></li>-->
+                    <!--<li class="menuspace"><a></a></li>-->
+                    <li><a href="/admin/news/index" target="main">信息管理</a></li>
+                    <li><a href="/admin/News/create" target="main">信息添加</a></li>
+                </ul>
+
+
+                <ul id="menu_cases" style="display: none">
+                    <li><a href="/admin/casesclass/index" target="main">分类管理</a></li>
+                    <li><a href="/admin/casesclass/create" target="main">分类添加</a></li>
+                    <li class="menuspace"><a></a></li>
+                    <li><a href="/admin/cases/index" target="main">案例管理</a></li>
+                    <li><a href="/admin/cases/create" target="main">案例添加</a></li>
+                </ul>
+
+
+                <ul id="menu_statics" style="display: none">
+                    <!--<li><a href="/admin/staticclass/index" target="main">分类管理</a></li>-->
+                    <!--<li><a href="/admin/staticclass/create" target="main">分类添加</a></li>-->
+                    <!--<li class="menuspace"><a></a></li>-->
+                    <li><a href="/admin/statics/index" target="main">单页管理</a></li>
+                    <li><a href="/admin/statics/create" target="main">单页添加</a></li>
+                </ul>
+
+
+                <ul id="menu_message" style="display: none">
+                    <li><a href="/admin/message/index" target="main">留言</a></li>
+
+                </ul>
+
+
+                <ul id="menu_ads" style="display: none">
+                    <!--<li><a href="/admin/adsclass/index" target="main">分类管理</a></li>-->
+                    <!--<li><a href="/admin/adsclass/create" target="main">分类添加</a></li>-->
+                    <!--<li class="menuspace"><a></a></li>-->
+                    <li><a href="/admin/ads/index" target="main">广告管理</a></li>
+                    <li><a href="/admin/ads/create" target="main">广告添加</a></li>
+                </ul>
+
+                <ul id="menu_manager" style="display: none">
+
+                    <li><a href="/admin/manager/index" target="main">管理账户</a></li>
+                    <li class="menuspace"><a></a></li>
+                    <li><a href="/admin/pctemp/index" target="main">PC端模板</a></li>
+                    <li><a href="/admin/waptemp/index" target="main">移动端模板</a></li>
+                    <li class="menuspace"><a></a></li>
+                    <li><a href="/admin/system/edit" target="main">SEO设置</a></li>
+
+                </ul>
+
+            </div>
+        </td>
+        <td valign="top" width="100%" class="maincontent">
+            <iframe src="/admin/index/main" name="main" width="100%" height="100%" frameborder="0" scrolling="yes"
+                    style="overflow: visible;"></iframe>
+        </td>
+    </tr>
+</table>
+
+<!--锁屏-->
+<div id="LockScreen" style="display: none;">
+    <dl class="Screen">
+        <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="150" align="right">
+                    密码：
+                </td>
+                <td>
+					<span class="bg_text_code">
+						<input type="userpassword" name="lockpassword" username="{:session('admin.username')}"
+                               id="lockpassword" class="text_code" maxlength="20"
+                               onmouseover="this.className='text_code';"
+                               onMouseOut="this.className='text_code';"/>
+                    </span>
+                </td>
+                <td>
+                    <input type="button" name="btnLogin" id="btnLogin" value="" class='button_login'/></td>
+            </tr>
+        </table>
+    </dl>
+</div>
+<!--锁屏结束-->
+
+<div class="footer">
+    <p>Powered by <a href="http://www.sanways.com/" target="_blank">sanways Cms</a> 2.0</p>
+
+    <p>&copy; 2009-{:Date("Y")}, <a href="http://www.sanways.com/" target="_blank">善微网络 Inc.</a></p>
+</div>
+<script src="/console/js/admin.js" type="text/javascript"></script>
+<script src="/console/js/layer/layer.js" type="text/javascript"></script>
+<script type="text/JavaScript">
+    var topMenus = new Array('common', 'ads', 'news', 'manager', 'cases', 'statics', 'message')//大菜单参数数组
+    var menu_key = initMenu('leftmenu');//初始化
+
+    changeMenu(menu_key ? menu_key : 'index');
+    //初始化左侧菜单高度
+    var tt = 0
+    $$("leftmenu").style.height = document.body.clientHeight - 90 - 7 - 33 + "px";
+    var resizeTimer = null;
+    function doResize() {
+        $$("leftmenu").style.height = document.body.clientHeight - 90 - 7 - 33 + "px";
+        resizeTimer = null;
+    }
+    window.onresize = function () {
+        if (resizeTimer == null) {
+            resizeTimer = setTimeout("doResize()", 300);
+        }
+    }
+
+</script>
+</body>
+</html>

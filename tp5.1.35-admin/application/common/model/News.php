@@ -29,7 +29,7 @@ class News extends Model
                 }
             })->where(function ($query) use ($smallclassid) {
                 if ($smallclassid > 0) {
-                    $query->where('smallclassid', $smallclassid)->whereOr('FIND_IN_SET(' . $smallclassid . ', bigclassid)');
+                    $query->where('smallclassid', $smallclassid)->whereOr('bigclassid', 'like', '%' . $smallclassid . '%');
                 }
             })
             ->order('commend desc,checked desc,addtime desc')
@@ -58,7 +58,7 @@ class News extends Model
             })
             ->where(function ($query) use ($smallclassid) {
                 if ($smallclassid > 0) {
-                    $query->where('smallclassid', $smallclassid)->whereOr('FIND_IN_SET(' . $smallclassid . ', bigclassid)');
+                    $query->where('smallclassid', $smallclassid)->whereOr('bigclassid', 'like', '%' . $smallclassid . '%');
                 }
             })
             ->where('checked', $checked)
@@ -88,7 +88,7 @@ class News extends Model
                 }
             })->where(function ($query) use ($smallclassid) {
                 if ($smallclassid > 0) {
-                    $query->where('smallclassid', $smallclassid)->whereOr('FIND_IN_SET(' . $smallclassid . ', bigclassid)');
+                    $query->where('smallclassid', $smallclassid)->whereOr('bigclassid', 'like', '%' . $smallclassid . '%');
                 }
             })
             ->where('checked', 1)

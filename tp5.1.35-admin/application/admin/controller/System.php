@@ -2,84 +2,46 @@
 
 namespace app\admin\controller;
 
-use think\Controller;
-use think\Request;
 
-class System extends Controller
+class System extends Common
 {
-    /**
-     * 显示资源列表
-     *
-     * @return \think\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
-
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
 
     /**
      * 显示编辑资源表单页.
-     *
-     * @param  int  $id
+     * @param  int $id
      * @return \think\Response
      */
-    public function edit($id)
+    public function edit()
     {
-        //
+        if (request()->isPost()) {
+            //接收数据
+            $quest = $this->request->post();
+            //处理数据
+            if (input('?post.addtime')) {
+                $quest['addtime'] = strtotime(input('post.addtime'));//将时间数字化
+            }
+            //编辑数据
+            $res = $this->system->edit($quest);
+
+            if ($res['valid']) {
+                //执行成功
+                $this->success($res['msg'], 'edit');
+                exit;
+            } else {
+                $this->error($res['msg']);
+                exit;
+            }
+        }
+        //接收id
+        $id = input('param.id');
+
+        //显示当前数据
+        $system = $this->system->find($id);
+        $this->assign([ 'system' => $system]);
+
+        return $this->fetch();
     }
 
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * 删除指定资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function delete($id)
-    {
-        //
-    }
+
 }

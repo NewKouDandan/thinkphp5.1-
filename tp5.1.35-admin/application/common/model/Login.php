@@ -7,6 +7,10 @@ use think\Model;
 class Login extends Model
 {
 
+    protected $pk = 'id';
+    protected $field = true;
+    protected $table = 'sw_manage';
+
     /**
      * 登录判断
      * @param $data

@@ -1,0 +1,52 @@
+{extend name='layout/public'/}
+
+{block name='content'}
+    <script language='javascript'>if (parent.$$('admincpnav')) parent.$$('admincpnav').innerHTML = '后台首页&nbsp;&raquo;&nbsp;广告&nbsp;&raquo;&nbsp;分类管理';</script>
+
+    <!-- 分类列表  -->
+    <form action="" method="POST" >
+        <table width="100%" class="tb" >
+            <tr class=thead>
+                <th colspan="4">类别列表</th>
+            </tr>
+
+            <tr class="dtit">
+                <td width="4%">ID </td>
+                <td >名称</td>
+                <td width="8%"><a>排序</a></td>
+                <td width="10%" align="center">操作</td>
+            </tr>
+
+            {foreach name='categorys' key='key' item='vo'}
+            <tr bgcolor=#F0F0F0 class="li">
+                <td align="left" >{$vo['id']}</td>
+                <td align="" >{$vo['_cnname']}</td>
+                <td align="" >{$vo['sortid']}</td>
+                <td align='center'>
+                    <a href="{:url('edit',['id'=>$vo['id']])}" title='编辑此目录'>编辑</a>&nbsp;&nbsp;
+                    <a href="javascript:void(null);" class="del" data-url="{:url('del',['id'=>$vo['id']])}" title='删除此目录'>删除</a>&nbsp;&nbsp;
+                </td>
+            </tr>
+            {/foreach}
+        </table>
+    </form>
+
+{/block}
+
+{block name='js'}
+<script>
+
+    $(function () {
+       $(".del").click(function () {
+           var delurl=$(this).data('url');
+           parent.layer.confirm('确定删除此信息？', {
+               btn: ['确认','取消'] //按钮
+           }, function(){
+               parent.layer.closeAll();
+               location.href=delurl;
+           });
+       });
+    });
+
+</script>
+{/block}

@@ -1,0 +1,71 @@
+{extend name='layout/public'/}
+
+{block name='content'}
+
+<script language='javascript'>if (parent.$$('admincpnav')) parent.$$('admincpnav').innerHTML = '后台首页&nbsp;&raquo;&nbsp;编辑管理员'</script>
+
+
+<form action="edit" method="post">
+    <table class="tb">
+        <tr class=thead>
+            <th colspan=2>编 辑 管 理 员</th>
+        </tr>
+        <tr class="tdbg ">
+            <td width="20%" align="right">用 户 名：</td>
+            <td width="80%">
+                <input type="text" name="username" maxlength="35 " sytle='width:200px;' id="UserName"
+                       autocomplete="off" value="{$manager['username']}"/>
+            </td>
+        </tr>
+        <tr class="tdbg">
+            <td width="20%" align="right">密　　码：</td>
+            <td width="80%">
+                <input type="password" name="password" size="20" id="Pwd" autocomplete="off"/>
+                <span class=gray>不修改密码请为空</span>
+            </td>
+        </tr>
+        <tr class="tdbg">
+            <td width="20%" align="right">状　　态：</td>
+            <td><input name="istate" type="radio" class="np" id="Isopen" value="1" checked/>
+                &nbsp;<label for="Isopen" style="cursor:pointer; ">正常</label>
+                <input name="istate" class="np" type="radio" id="IsClose" value="0"/>
+                &nbsp;<label for="IsClose" style="cursor:pointer;">锁定</label></td>
+        </tr>
+
+        <tr class="tdbg ">
+            <td width="20% " align="right">管理权限：</td>
+            <td><input name="permissions" type="radio" id="IsPurview1" class="np" value="0" checked/>
+                &nbsp;<label for="IsPurview1" style="cursor:pointer; ">系统管理员<span class="red ">(拥有全部权限)</span></label>
+                <input name="permissions" type="radio" id="Purview2" class="np" value="1"/>
+                &nbsp;<label for="Purview2" style="cursor:pointer;">网站编辑<span class="red">(只拥有数据管理权限)</span></label>
+            </td>
+        </tr>
+
+        <tr class="tdbg">
+            <td></td>
+            <td height="40">
+                <input name="id" type="hidden" id="action" value="{$manager['id']}"/>
+                <input type="submit" class=btn value="提交"/>
+            </td>
+        </tr>
+    </table>
+</form>
+{/block}
+
+{block name='js'}
+<script>
+
+    $(function () {
+        $(".del").click(function () {
+            var delurl = $(this).data('url');
+            parent.layer.confirm('确定删除此信息？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                parent.layer.closeAll();
+                location.href = delurl;
+            });
+        });
+    });
+
+</script>
+{/block}

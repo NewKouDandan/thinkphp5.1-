@@ -81,3 +81,18 @@ function update($db, $action, $ids)
 //+----------------------------------------------------------------------
 //  前端 常用公共函数
 //+----------------------------------------------------------------------
+
+
+/**
+ * 给编辑器里的图片加上域名地址
+ * @param string $content 编辑器里的内容
+ * @param string $rooturl 域名地址
+ * @return mixed|string
+ */
+function replace_img_url($content = "", $rooturl = "")
+{
+    $pregRule = "/<[img|IMG].*?src=[\'|\"].*?/";
+    $content = preg_replace($pregRule, '<img src="' . $rooturl . '${1}', $content);
+    return $content;
+}
+
