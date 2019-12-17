@@ -1,0 +1,105 @@
+{extend name='layout/public'/}
+
+{block name='content'}
+
+<script language='javascript'>if (parent.$$('admincpnav')) parent.$$('admincpnav').innerHTML = '后台首页&nbsp;&raquo;&nbsp;管理用户设置';</script>
+
+
+<table class=tb width="100%">
+    <tr class=thead>
+        <th colspan=7>用户显示</th>
+    </tr>
+
+    <tr class="dtit">
+
+        <td>用户名称</td>
+        <td>最近登录地址</td>
+        <td>最近登录时间</td>
+        <td>权限级别</td>
+        <td>登录状态</td>
+        <td>操作</td>
+    </tr>
+
+    {foreach name='manager' id='us'}
+    <tr class="tdbg li">
+        <td align="left"><a href="{:url('edit',['id'=>$us['id']])}" style="color:#0066FF">{$us['username']}</a></td>
+        <td>{$us['loginIp']}</td>
+        <td>{:date('Y/m/d H:i',$us['logintime'])}</td>
+        {if condition="$us['permissions']==0"}<td>系统管理员</td>{/if}
+        {if condition="$us['permissions']==1"}<td>网站编辑</td>{/if}
+        {if condition="$us['istate']==0"}<td>锁定</td>{/if}
+        {if condition="$us['istate']==1"}<td>正常</td>{/if}
+        <td>
+            {if condition="$us['id']!=session('admin.id')" }
+            <a href="{:url('edit',['id'=>$us['id']])}" style="color:#0066FF">编辑</a>
+            <a class="del" href="javascript:void(null)" data-url="{:url('del',['id'=>$us['id']])}">删除</a>
+            {/if}
+            {if condition="$us['id']==session('admin.id')" }---------{/if}
+        </td>
+    </tr>
+    {/foreach}
+
+</table>
+<form action="managerstore" method="post" name="Gforms" id="Gforms">
+    <table class="tb" id=tb>
+        <tr class=thead>
+            <th colspan=2>添 加 管 理 员</th>
+        </tr>
+        <tr class="tdbg ">
+            <td width="20%" align="right">用 户 名：</td>
+            <td width="80%">
+                <input type="text" name="username" maxlength="35 " sytle='width:200px;' id="UserName "
+                       autocomplete="off"/>
+            </td>
+        </tr>
+        <tr class="tdbg">
+            <td width="20%" align="right">密　　码：</td>
+            <td width="80%">
+                <input type="password" name="password" size="20" id="Pwd" value="" autocomplete="off"/>
+            </td>
+        </tr>
+        <tr class="tdbg">
+            <td width="20%" align="right">状　　态：</td>
+            <td><input name="istate" type="radio" class="np" id="Isopen" value="1" checked/>
+                &nbsp;<label for="Isopen" style="cursor:pointer; ">正常</label>
+                <input name="istate" class="np" type="radio" id="IsClose" value="0"/>
+                &nbsp;<label for="IsClose" style="cursor:pointer;">锁定</label></td>
+        </tr>
+
+        <tr class="tdbg ">
+            <td width="20% " align="right">管理权限：</td>
+            <td><input name="permissions" type="radio" id="IsPurview1" class="np" value="0" checked/>
+                &nbsp;<label for="IsPurview1" style="cursor:pointer; ">系统管理员<span class="red ">(拥有全部权限)</span></label>
+                <input name="permissions" type="radio" id="Purview2" class="np" value="1"/>
+                &nbsp;<label for="Purview2" style="cursor:pointer;">网站编辑<span class="red">(只拥有数据管理权限)</span></label>
+            </td>
+        </tr>
+
+        <tr class="tdbg">
+            <td></td>
+            <td height="40">
+                <input name="id" type="hidden" id="action"/>
+                <input type="submit" class=btn value="提交"/>
+            </td>
+        </tr>
+    </table>
+</form>
+{/block}
+
+{block name='js'}
+<script>
+
+    $(function () {
+        $(".del").click(function () {
+            var delurl = $(this).data('url');
+            parent.layer.confirm('确定删除此信息？', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                parent.layer.closeAll();
+                location.href = delurl;
+            });
+        });
+    });
+
+</script>
+{/block}

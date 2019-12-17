@@ -1,0 +1,57 @@
+{extend name='layout/public'/}
+
+{block name='content'}
+
+<script language='javascript'>if (parent.$$('admincpnav')) parent.$$('admincpnav').innerHTML = '后台首页&nbsp;&raquo;&nbsp;系统设置';</script>
+
+<script type="text/javascript" src="/console/js/calendar/calendar.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
+
+<form   method="post" action="{:url('edit')}">
+    <table class=tb width="100%" id="tb">
+        <tr class=thead>
+            <th colspan=2>系统设置</th>
+        </tr>
+
+        <tr class=tdbg>
+            <td valign="middle" align="right"><span class=red>*</span> 网站名称：</td>
+            <td><input name="web_name" type="TEXT" style='width:380px;' maxlength=200 value="{$system['web_name']}"></td>
+        </tr>
+
+        <tr class=tdbg>
+            <td valign="middle" align="right"><span class=red>*</span>网站首页标题：</td>
+            <td><input name="web_title" type="TEXT" style='width:380px;' maxlength=200 value="{$system['web_title']}"></td>
+        </tr>
+
+        <tr class=tdbg>
+            <td valign="middle" align="right">网站首页关键字：</td>
+            <td><input name="web_key" type="TEXT" style='width:380px;' maxlength=200 value="{$system['web_key']}"></td>
+        </tr>
+
+        <tr class=tdbg>
+            <td valign="middle" align="right">网站首页描述：</td>
+            <td><textarea name="web_content" rows="3" style='width:380px;' maxlength=200>{$system['web_content']}</textarea></td>
+        </tr>
+
+        <tr class="tdbg">
+            <td ></td>
+            <td align="left" >
+                <input class="btn" type="hidden" value="{$system['id']}" name='id'>
+                <input class="btn" type="submit" value="确定">
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+{/block}
+
+
+{block name='js'}
+<script type="text/javascript" charset="utf-8" src="http://console.uicdn.cn/assets/js/webuploader/webuploader.min.js "></script>
+<script type="text/javascript" charset="utf-8" src="http://console.uicdn.cn/assets/js/uploader.js"></script>
+{/block}
+
+
+

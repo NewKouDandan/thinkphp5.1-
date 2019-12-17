@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>网站后台登陆中心</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    <link type="text/css" href="/console/img/login.css" rel="stylesheet"/>
+    <script src='/console/js/jquery-1.7.1.min.js' language="javascript" type="text/javascript"></script>
+    <!--[if IE 6]>
+    <script src="/console/js/DD_belatedPNG_0.0.8a-min.js" mce_src="/console/js/DD_belatedPNG_0.0.8a-min.js"></script>
+    <![endif]-->
+
+    <!--跳出当前框架的js-->
+    <script type="text/javascript">
+
+        //写法一
+        if(window !=top){
+            top.location.href=location.href;
+        }
+
+        //写法二
+//        if (top.location !== self.location) {
+//            top.location=self.location;
+//        }
+
+    </script>
+
+</head>
+
+<body  class="body_login">
+<form method="post" action="/admin/login" name="Loginbox" id="Loginbox">
+    <div class="login">
+        <div class="logo">
+            <img src="/console/img/login_logo.png" width="300" height="90"  id="loginlogo" />
+        </div>
+        <div class="txt no_code"><!--txt no_code-->
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <span class="bj_text_user">
+                            <input name="username" type="text" id="username"  tabindex="1" class="text_user" autocomplete="off" maxlength="20"
+                                                          {if condition="session('admin.username')==true"}value="{:session('admin.username')}"{/if}
+                                                          {if condition="session('admin.username')==false"}value="用户名"{/if}
+                            />
+                        </span>
+                    </td>
+                    <td>
+                        <span class="bg_text_password"><input type="text" name="txtPwdwm" id="txtPwdwm" value="密码"  class="text_password" maxlength="20" />
+                            <input name="password" type="password" id="userpassword" class="text_password" style="display:none;" maxlength="20" />
+                        </span>
+                    </td>
+
+                    <td>
+                        <!--<input type="hidden" value="{:gethostbyname($_SERVER['SERVER_NAME'])}" name="loginIp">-->
+                        <input type="submit" name="input_sub" value="" id="input_sub"  tabindex="3"  class="button_login" />
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <div class="copyright">
+            <span class="name">
+                <input id="ckRemember" type="checkbox" name="ckRemember" value="1" /> 记住用户名</span>
+            <span> Power by SANWAYS</span>
+        </div>
+        <div id="divMessage" style=" text-align:center;"> </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $("#username").focus(function() {
+        if ($(this).val() == "用户名") {
+            $(this).val("");
+        }
+    }).focusout(function() {
+        if ($(this).val() == "") {
+            $(this).val("用户名");
+        }
+    });
+
+    $("#txtPwdwm").focus(function() {
+        $("#userpassword").show().focus();
+        $(this).hide();
+    });$("#userpassword").focusout(function() {
+        if ($(this).val() == "") {
+            $("#txtPwdwm").show();
+            $(this).hide();
+        }
+    });
+</script>
+</body>
+</html>
