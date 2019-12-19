@@ -24,7 +24,8 @@
         "topthink/think-migration": "^2.0",
         "topthink/think-worker": "^2.0",
         "topthink/think-mongo": "^2.0",
-        "houdunwang/arr": "^2.0"
+        "houdunwang/arr": "^2.0",
+        "phpmailer/phpmailer": "^6.1"
     },
     "autoload": {
         "psr-4": {
