@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use think\Config;
 use think\Controller;
+use think\facade\Env;
 
 
 class Ueditor extends Common
@@ -114,8 +115,8 @@ class Ueditor extends Common
 
             //此处是读取文件的路径
 
-            //入口文件在public目录下时
-            $info = $file->validate($validate)->move(ROOT_PATH . 'public/' . $this->uploadfolder);
+            //入口文件在public目录下时   Env::get('root_path')相当于tp5中的ROOT_PATH
+            $info = $file->validate($validate)->move(Env::get('root_path').'public/' . $this->uploadfolder);
             //根目录不一致/入口文件不在public下 时
 //				$info = $file->validate($validate)->move(ROOT_PATH . $this->uploadfolder);
             if ($info) {
