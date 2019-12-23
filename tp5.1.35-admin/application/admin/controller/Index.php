@@ -3,7 +3,6 @@
 namespace app\admin\controller;
 
 use app\common\model\Manager;
-use app\common\model\User;
 use think\Controller;
 use think\Model;
 

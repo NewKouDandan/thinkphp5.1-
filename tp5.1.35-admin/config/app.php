@@ -143,4 +143,49 @@ return [
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
 
+
+
+
+    //后台插件上传图片配置
+    'swupload' => [
+        'image' => [
+            'updir' => 'uploads/images/',
+            'max_size' => '20000000', //图片上传大小 单位是b，此处约等于195kb
+            'file_type' => ['png', 'jpg', 'jpeg', 'gif']
+        ],
+        'file' => [
+            'updir' => 'uploads/files/',
+            'max_size' => '20480000', //上传大小 单位是b，约等于19.5mb
+            'file_type' => ['xlsx', 'xls']
+        ],
+        'imgvideo' => [
+            'updir' => 'uploads/files/',
+            'max_size' => '20480000', //上传大小 单位是b，约等于19.5mb
+            'file_type' => ['png', 'jpg', 'jpeg', 'gif', 'mp4']
+        ]
+    ],
+
+    //短信配置
+    'ucpaas' => [
+        //开发者 Account Sid
+        'accountsid' => 'a251979a2faad604dc3b3ebc0e193008',
+        //Auth Token
+        'token' => '53b3bf0fb2b17570ff4c922a174288d9',
+        //应用的ID，可在开发者控制台内的短信产品下查看
+        'appid' => '28eb14d1f9e145eaab1fdc36bf7daf42',
+        //模板ID
+        'templateid' => '502042',
+    ],
+
+
+    //分页配置
+    'paginate' => [
+        'type' => 'bootstrap',
+        'var_page' => 'page',
+        'list_rows' => 15,
+        'list_show' => 1,
+//        'path'=>'[PAGE].html',
+    ],
+
+
 ];

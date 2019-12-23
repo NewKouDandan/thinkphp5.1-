@@ -17,5 +17,8 @@ require __DIR__ . '/../thinkphp/base.php';
 
 // 支持事先使用静态方法设置Request对象和Config对象
 
+//定义第三方引入文件
+define('EXTEND_PATH',__DIR__.'/../extend/');
+
 // 执行应用并响应
 Container::get('app')->run()->send();
