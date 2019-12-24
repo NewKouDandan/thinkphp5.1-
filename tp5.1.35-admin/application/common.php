@@ -72,8 +72,117 @@ function update($db, $action, $ids)
         case 'Del':
             $db->whereIn('id', $ids)->delete();
             break;
+
+        case 'Download':
+            $data = $db->whereIn('id', $ids)->order('id desc')->select();
+            //构造列表头
+            $field = array(
+                'A' => array('name', '姓名'),
+                'B' => array('xb', '性别'),
+                'C' => array('nation', '民族'),
+                'D' => array('csny', '出身年月'),
+                'E' => array('idcard', '身份证号码'),
+                'F' => array('nj', '就读年级'),
+                'G' => array('jdxx', '之前就读学校'),
+                'H' => array('xxdz', '详细地址'),
+                'I' => array('fathername', '父亲姓名'),
+                'J' => array('fathertel', '父亲电话'),
+                'K' => array('mothername', '母亲姓名'),
+                'L' => array('mothertel', '母亲电话'),
+                'M' => array('wy1', '期末语文成绩'),
+                'N' => array('ws1', '期末数学成绩'),
+                'O' => array('we1', '期末英语成绩'),
+                'P' => array('wpm1', '期末班级排名'),
+
+            );
+            //调用将数据导成xls格式数据的函数
+            phpExcel($field, $data, "小升初-".date('Y-m-d'));
+            break;
     }
 
+}
+
+
+/**
+ * 将数据 导出为 xls 格式 成功
+ * @param $headArr //表头
+ * @param $data //查询数据
+ * @param $filename //下载文件名
+ * 示例：
+ * $data = db('message')->whereIn('id', $ids)->select();
+ * $field = array(
+ * '表格头：A第一列，B第二列...'=>array('字段名：数据表中的字段','表格第一行的介绍')
+ * 'A' => array('id', '唯一标识符'),
+ * 'B' => array('title', '主题'),
+ * 'C' => array('phonenum', '电话'),
+ * 'D' => array('addtime', '时间'),
+ * );
+ * phpExcel($field, $data, date('Y-m-d'));
+ */
+function phpExcel($headArr, $data, $filename)
+{
+    //引入文件
+    require_once(EXTEND_PATH . 'PHPExcel/Classes/PHPExcel.php');
+    //实例化
+    $objPHPExcel = new PHPExcel();
+    $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel); //设置保存版本格式
+    foreach ($data as $key => $value) {
+        foreach ($headArr as $k => $v) {
+
+            //设置报表列头
+            if ($key == 0) {
+                $objPHPExcel->getActiveSheet()->setCellValue($k . '1', $v[1]);
+
+
+                /**
+                 * 表格相关设置
+                 */
+                //设置固定单元格宽度
+//                $objPHPExcel->getActiveSheet()->getColumnDimension($k)->setWidth(20);
+                //设置单元格宽度自适应文本长度
+//                $objPHPExcel->getActiveSheet()->getColumnDimension($k)->setAutoSize(true);
+                //水平居中
+//                $objPHPExcel->getActiveSheet()->getStyle($k . '1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                //垂直居中
+//                $objPHPExcel->getActiveSheet()->getStyle($k . '1')->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+            }
+
+            //添加表格内容
+            $i = $key + 2; //表格是从2开始的
+            $objPHPExcel->getActiveSheet()->setCellValue($k . $i, $value[$v[0]]);
+
+
+            /**
+             * 表格相关设置
+             */
+
+            //设置格式为PHPExcel_Style_NumberFormat::FORMAT_NUMBER，避免某些大数字
+            //被使用科学记数方式显示，配合下面的 setAutoSize 方法可以让每一行的内容
+            //都按原始内容全部显示出来
+            $objPHPExcel->getActiveSheet()->getStyle($k.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER);
+
+            //设置单元格宽度自适应文本长度
+            $objPHPExcel->getActiveSheet()->getColumnDimension($k)->setAutoSize(true);
+            //水平居中
+//            $objPHPExcel->getActiveSheet()->getStyle($k . $i)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            //垂直居中
+//            $objPHPExcel->getActiveSheet()->getStyle($k . $i)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+            //文本自动换行
+            $objPHPExcel->getActiveSheet()->getStyle($k . $i)->getAlignment()->setWrapText(true);
+        }
+    }
+
+    //
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+    header("Content-Type:application/force-download");
+    header("Content-Type:application/vnd.ms-execl");
+    header("Content-Type:application/octet-stream");
+    header("Content-Type:application/download");;
+    header('Content-Disposition:attachment;filename=' . $filename . '.xls');
+    header("Content-Transfer-Encoding:binary");
+    $objWriter->save('php://output');
 }
 
 
@@ -97,10 +206,14 @@ function replace_img_url($content = "", $rooturl = "")
 }
 
 
+
 /**
  * PHPMailer类的使用
  * 成功
- * @throws \think\Exception
+ * @param $email  //收件人
+ * @param $body   //邮件正文
+ * @return bool
+ * @throws \PHPMailer\PHPMailer\Exception
  */
 function phpmail($email, $body)
 {
@@ -169,3 +282,5 @@ function phpmail($email, $body)
     return $status;
 
 }
+
+
