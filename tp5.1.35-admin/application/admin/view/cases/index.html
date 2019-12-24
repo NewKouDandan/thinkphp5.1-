@@ -41,8 +41,8 @@
                     <!--|mb_substr=0,40,'utf-8'}</a>-->
                 </td>
                 <td>{$new['cnname']}</td>
-                <td>{$new.checked|getchecked}</td>
-                <td> {$new.commend|getcommend}</td>
+                <td>{$new.checked|getchecked|raw}</td>
+                <td> {$new.commend|getcommend|raw}</td>
                 <td>{:date('Y-m-d H:i',$new['addtime'])}</td>
                 <td>
                     <a href="{:url('edit',['id'=>$new['id']])}">编辑</a>
@@ -73,7 +73,7 @@
                 <td colspan="7">
                     <div class='pages'>
                         <ul>页次：{$lists->getCurrentPage()}/{$lists->lastPage()} 页 &nbsp;共{$lists->total()}条记录</ul>
-                        {$lists->render()}
+                        {$lists->render()|raw}
                     </div>
                 </td>
             </tr>

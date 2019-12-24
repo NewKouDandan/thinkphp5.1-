@@ -71,7 +71,7 @@
             <td colspan="7">
                 <div class='pages'>
                     <ul>页次：{$ads->getCurrentPage()}/{$ads->lastPage()} 页 &nbsp;共{$ads->total()}条记录</ul>
-                    {$ads->render()}
+                    {$ads->render()|raw}
 
                 </div>
             </td>

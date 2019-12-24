@@ -73,7 +73,8 @@
                 <td colspan="7">
                     <div class='pages'>
                         <ul>页次：{$lists->getCurrentPage()}/{$lists->lastPage()} 页 &nbsp;共{$lists->total()}条记录</ul>
-                        {$lists->render()}
+                        <!--html翻译输出-->
+                        {$lists->render()|raw}
                     </div>
                 </td>
             </tr>
