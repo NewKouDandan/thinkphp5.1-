@@ -50,9 +50,9 @@ function getcommend($commend)
 
 /**
  * 更新后台部分字段常用
- * @param $db //指向模型
- * @param $action //操作
- * @param $ids //ids
+ * @param $db       //指向模型
+ * @param $action   //操作
+ * @param $ids      //ids
  */
 function update($db, $action, $ids)
 {
@@ -105,9 +105,9 @@ function update($db, $action, $ids)
 
 /**
  * 将数据 导出为 xls 格式 成功
- * @param $headArr //表头
- * @param $data //查询数据
- * @param $filename //下载文件名
+ * @param $headArr      //表头
+ * @param $data         //查询数据
+ * @param $filename     //下载文件名
  * 示例：
  * $data = db('message')->whereIn('id', $ids)->select();
  * $field = array(
@@ -208,6 +208,194 @@ function replace_img_url($content = "", $rooturl = "")
 
 
 /**
+ * 图片裁剪
+ * @param $url                  //原图片地址 绝对地址
+ * @param $w                    //裁剪宽度
+ * @param $h                    //裁剪高度
+ * @param string $savePath      //裁剪后图片保存地址 绝对地址
+ * @param int $x                //裁剪起始x位置 默认为居中裁剪
+ * @param int $y                //裁剪起始y位置
+ * @return bool|mixed|string    //成功返回相对地址
+ */
+function cropImg($url, $w, $h, $savePath = '', $x = 0, $y = 0)
+{
+    //打开图片
+    $image = \think\Image::open($url);
+    //上传图片的宽高
+    $imgW = $image->width();
+    $imgH = $image->height();
+
+    //判断原图片宽高与裁剪宽高
+    if ($imgW < $w) {
+        $w = $imgW;
+    }
+    if ($imgH < $h) {
+        $h = $imgH;
+    }
+
+    //文件类型
+    $type = $image->type();
+
+    //设置裁剪图片的宽高，起始位置
+
+    //居中裁剪
+    if ($x == 0 || $y == 0) {
+        $x = ($imgW - $w) / 2;
+        $y = ($imgH - $h) / 2;
+    }
+
+    if ($savePath == '') {
+        //保存路径
+        $path = ROOT_PATH . 'public';
+        $dirName = 'uploads' . DS . 'images' . DS . 'cropImg' . DS . date('Ymd', time());
+        $fileName = md5(time());
+
+        //目标目录不存在，则创建目录
+        if (!file_exists($dirName)) {
+//            mkdir($dirName);
+            mkdir($dirName, 0777, true);
+        }
+
+        //完整路径
+        $pathName = $path . DS . $dirName . DS . $fileName . '.' . $type;
+
+    } else {
+        $dirName = $savePath;
+
+        //目标目录不存在，则创建目录
+        if (!file_exists($dirName)) {
+//            mkdir($dirName);
+            mkdir($dirName, 0777, true);
+        }
+
+        $fileName = md5(time());
+        $pathName = $dirName . DS . $fileName . '.' . $type;
+    }
+
+    //裁剪图片
+    $res = $image->crop($w, $h, $x, $y)->save($pathName);
+
+    if ($res) {
+        //数据库保存地址
+        $dbPath = DS . $dirName . DS . $fileName . '.' . $type;
+        //将 反斜杠 替换成 斜杠
+        $dbPath = str_replace("\\", '/', $dbPath);
+
+        return $dbPath;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * 缩略图
+ * @param $url                  //原图片地址 绝对地址
+ * @param $w                    //缩略图宽
+ * @param $h                    //缩略图高
+ * @param string $savePath      //保存路径 绝对地址
+ * @return bool|mixed|string    //成功返回相对地址，失败false
+ */
+function thumbImg($url, $w, $h, $savePath = '')
+{
+    //打开图片
+    $image = \think\Image::open($url);
+    //文件类型
+    $type = $image->type();
+    //上传图片的宽高
+    $imgW = $image->width();
+    $imgH = $image->height();
+
+    //判断原图片宽高与裁剪宽高
+    if ($imgW < $w) {
+        $w = $imgW;
+    }
+    if ($imgH < $h) {
+        $h = $imgH;
+    }
+
+    if ($savePath == '') {
+        //保存路径
+        $path = ROOT_PATH . 'public';
+        $dirName = 'uploads' . DS . 'images' . DS . 'thumbImg' . DS . date('Ymd', time());
+        $fileName = md5(time());
+
+        //目标目录不存在，则创建目录
+        if (!file_exists($dirName)) {
+//            mkdir($dirName);
+            mkdir($dirName, 0777, true);
+        }
+
+        //完整路径
+        $pathName = $path . DS . $dirName . DS . $fileName . '.' . $type;
+
+    } else {
+        $dirName = $savePath;
+
+        //目标目录不存在，则创建目录
+        if (!file_exists($dirName)) {
+//            mkdir($dirName);
+            mkdir($dirName, 0777, true);
+        }
+
+        $fileName = md5(time());
+        $pathName = $dirName . DS . $fileName . '.' . $type;
+    }
+
+
+    //缩略图片  第三个参数 6 标识缩略图固定尺寸缩放类型
+    $res = $image->thumb($w, $h, 6)->save($pathName);
+
+    if ($res) {
+        //数据库保存地址
+        $dbPath = DS . $dirName . DS . $fileName . '.' . $type;
+        //将 反斜杠 替换成 斜杠
+        $dbPath = str_replace("\\", '/', $dbPath);
+
+        return $dbPath;
+    } else {
+        return false;
+    }
+
+}
+
+
+/**
+ * 邮箱主体
+ * @param $token //用来验证的token值（开发者自己构造token值，发送到用户邮箱并保存到数据库，两者对比后方便验证）
+ * @return string
+ */
+function body($url, $token)
+{
+
+    return
+        '<div class="wrapper" style="margin: 20px auto 0; width: 500px; padding-top:16px; padding-bottom:10px;">
+    <div class="header clearfix">
+        <a class="logo"
+           href="http://sctrack.sc.gg/track/click/eyJtYWlsbGlzdF9pZCI6IDAsICJ0YXNrX2lkIjogIiIsICJlbWFpbF9pZCI6ICIxNTU3NzEzNjI0OTY0XzY3NDhfMjE2ODlfNDk4My5zYy0xMF85XzQwXzE2NC1pbmJvdW5kMCRteWxhb3d1QHZpcC5xcS5jb20iLCAic2lnbiI6ICJjMTAzMzI4Y2UzYzdjMDg4ZjIxNWY5YjkyMzk3ZmRhNCIsICJ1c2VyX2hlYWRlcnMiOiB7fSwgImxhYmVsIjogMCwgImxpbmsiOiAiaHR0cHMlM0EvL3Nlby5qdXppc2VvLmNvbSIsICJ1c2VyX2lkIjogNjc0OCwgImNhdGVnb3J5X2lkIjogMTMxMjM0fQ==.html"
+           target="_blank"><b>来自Archrace的邮件</b></a>
+    </div>
+    <br style="clear:both; height:0">
+
+    <div class="content"
+         style="background: none repeat scroll 0 0 #FFFFFF; border: 1px solid #E9E9E9; margin: 2px 0 0; padding: 30px;">
+
+        <p>您好: </p>
+
+        <p>这是您在 Archrace 上的重要邮件, 功能是进行 Archrace 帐户邮箱验证, 请点击下面的连接完成验证</p>
+
+        <p style="border: 1px solid #DDDDDD;margin: 15px 0 25px;padding: 15px;background-color:#fafafa">
+            请点击链接继续: <a href="' . $url . '/jihuo?token=' . $token . '"target=" _blank">' . $url . '/jihuo?token=' . $token . '</a>
+        </p>
+
+        <p class="footer" style="border-top: 1px solid #DDDDDD; padding-top:15px; margin-top:25px; color:#838383;">
+            有任何建议或需人工帮助，请回复邮件到 <br>archrace@163.com<br>
+            或登录网站：<a href="http://www.archrace.com" target="_blank">https://www.archrace.com</a><br><br><br></p>
+    </div>
+</div>';
+
+}
+
+/**
  * PHPMailer类的使用
  * 成功
  * @param $email  //收件人
@@ -280,7 +468,6 @@ function phpmail($email, $body)
     // 发送邮件 返回状态
     $status = $mail->send();
     return $status;
-
 }
 
 
